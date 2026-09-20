@@ -14,6 +14,10 @@ export const dealerSchema = z.object({
     .string()
     .min(1, 'Zip code is required')
     .regex(/^\d{8}$/, 'Zip code must contain 8 digits'),
+
+  number: z
+    .string()
+    .min(1, 'Address number is required'),
 })
 
 export type DealerFormData = z.infer<typeof dealerSchema>

@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { toast } from 'sonner'
 
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -9,9 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-
 import { Skeleton } from '@/components/ui/skeleton'
-import { Button } from '@/components/ui/button'
 
 import { DealerForm } from '../components/DealerForm'
 import { useDealer } from '../hooks/useDealer'
@@ -68,7 +67,7 @@ export function DealerEditPage() {
 
         onError: () => {
           toast.error(
-            'Não foi possível atualizar a concessionária. Tente novamente.',
+            'Não foi possível atualizar a concessionária. Verifique os dados e tente novamente.',
           )
         },
       },
@@ -82,19 +81,19 @@ export function DealerEditPage() {
   if (!dealerId) {
     return (
       <main className="mx-auto w-full max-w-2xl p-6">
+        <div className="mb-6 space-y-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            Concessionária inválida
+          </h1>
+
+          <p className="text-sm text-muted-foreground">
+            Não foi possível identificar a concessionária
+            solicitada.
+          </p>
+        </div>
+
         <Card>
-          <CardHeader>
-            <CardTitle>
-              Concessionária inválida
-            </CardTitle>
-
-            <CardDescription>
-              Não foi possível identificar a concessionária
-              informada.
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent>
+          <CardContent className="pt-6">
             <Button
               type="button"
               variant="outline"
@@ -111,10 +110,15 @@ export function DealerEditPage() {
   if (isLoadingDealer) {
     return (
       <main className="mx-auto w-full max-w-2xl p-6">
+        <div className="mb-6 space-y-2">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-4 w-96 max-w-full" />
+        </div>
+
         <Card>
           <CardHeader>
-            <Skeleton className="h-7 w-52" />
-            <Skeleton className="h-4 w-80" />
+            <Skeleton className="h-6 w-48" />
+            <Skeleton className="h-4 w-80 max-w-full" />
           </CardHeader>
 
           <CardContent className="space-y-6">
@@ -131,11 +135,12 @@ export function DealerEditPage() {
             <div className="space-y-2">
               <Skeleton className="h-4 w-10" />
               <Skeleton className="h-9 w-full" />
+              <Skeleton className="h-4 w-72 max-w-full" />
             </div>
 
-            <div className="flex justify-end gap-3">
-              <Skeleton className="h-9 w-24" />
-              <Skeleton className="h-9 w-36" />
+            <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+              <Skeleton className="h-9 w-full sm:w-24" />
+              <Skeleton className="h-9 w-full sm:w-36" />
             </div>
           </CardContent>
         </Card>
@@ -146,15 +151,26 @@ export function DealerEditPage() {
   if (isDealerError || !dealer) {
     return (
       <main className="mx-auto w-full max-w-2xl p-6">
+        <div className="mb-6 space-y-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            Concessionária não encontrada
+          </h1>
+
+          <p className="text-sm text-muted-foreground">
+            Não foi possível encontrar os dados da
+            concessionária solicitada.
+          </p>
+        </div>
+
         <Card>
           <CardHeader>
             <CardTitle>
-              Concessionária não encontrada
+              Não foi possível carregar a concessionária
             </CardTitle>
 
             <CardDescription>
-              Não foi possível carregar os dados solicitados.
-              Verifique se a concessionária ainda existe.
+              O registro pode não existir mais ou ocorreu
+              uma falha durante a consulta.
             </CardDescription>
           </CardHeader>
 
@@ -180,16 +196,27 @@ export function DealerEditPage() {
 
   return (
     <main className="mx-auto w-full max-w-2xl p-6">
+      <div className="mb-6 space-y-1">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+          Editar concessionária
+        </h1>
+
+        <p className="text-sm text-muted-foreground">
+          Atualize os dados da concessionária e mantenha
+          as informações do catálogo sempre atualizadas.
+        </p>
+      </div>
+
       <Card>
         <CardHeader>
           <CardTitle>
-            Editar concessionária
+            Dados da concessionária
           </CardTitle>
 
           <CardDescription>
-            Atualize as informações da concessionária.
-            O endereço será atualizado automaticamente
-            através do CEP informado.
+            Altere as informações necessárias. Caso o CEP
+            seja modificado, o endereço será atualizado
+            automaticamente.
           </CardDescription>
         </CardHeader>
 

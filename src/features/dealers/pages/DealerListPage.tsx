@@ -12,9 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-
 import { Button } from '@/components/ui/button'
-
 import {
   Card,
   CardContent,
@@ -22,9 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-
 import { Skeleton } from '@/components/ui/skeleton'
-
 import {
   Table,
   TableBody,
@@ -36,6 +32,8 @@ import {
 
 import { useDealers } from '../hooks/useDealers'
 import { useDeleteDealer } from '../hooks/useDeleteDealer'
+import { formatCnpj } from '@/lib/formatters/formatCnpj'
+import { formatAddress } from '@/lib/formatters/formatAddress'
 
 export function DealerListPage() {
   const navigate = useNavigate()
@@ -75,17 +73,23 @@ export function DealerListPage() {
   if (isPending) {
     return (
       <main className="mx-auto w-full max-w-6xl p-6">
+        <div className="mb-6 space-y-2">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-4 w-96 max-w-full" />
+        </div>
+
         <Card>
           <CardHeader>
-            <Skeleton className="h-7 w-48" />
-            <Skeleton className="h-4 w-72" />
+            <Skeleton className="h-6 w-48" />
+            <Skeleton className="h-4 w-80 max-w-full" />
           </CardHeader>
 
           <CardContent className="space-y-3">
             <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
-            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
           </CardContent>
         </Card>
       </main>
@@ -95,6 +99,16 @@ export function DealerListPage() {
   if (isError) {
     return (
       <main className="mx-auto w-full max-w-6xl p-6">
+        <div className="mb-6 space-y-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            Concessionárias
+          </h1>
+
+          <p className="text-sm text-muted-foreground">
+            Gerencie as concessionárias vinculadas ao catálogo.
+          </p>
+        </div>
+
         <Card>
           <CardHeader>
             <CardTitle>
@@ -102,8 +116,8 @@ export function DealerListPage() {
             </CardTitle>
 
             <CardDescription>
-              Ocorreu uma falha ao consultar os dados.
-              Tente novamente mais tarde.
+              Ocorreu uma falha durante a consulta dos dados.
+              Verifique a conexão e tente novamente.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -113,39 +127,57 @@ export function DealerListPage() {
 
   return (
     <main className="mx-auto w-full max-w-6xl p-6">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="space-y-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            Concessionárias
+          </h1>
+
+          <p className="text-sm text-muted-foreground">
+            Gerencie as concessionárias vinculadas ao catálogo
+            de veículos.
+          </p>
+        </div>
+
+        <Button
+          type="button"
+          onClick={handleCreate}
+          className="w-full sm:w-auto"
+        >
+          Nova concessionária
+        </Button>
+      </div>
+
       <Card>
-        <CardHeader className="flex flex-row items-start justify-between gap-4">
-          <div>
-            <CardTitle>
-              Concessionárias
-            </CardTitle>
+        <CardHeader>
+          <CardTitle>
+            Concessionárias cadastradas
+          </CardTitle>
 
-            <CardDescription>
-              Gerencie as concessionárias cadastradas
-              no DriveFlow.
-            </CardDescription>
-          </div>
-
-          <Button onClick={handleCreate}>
-            Nova concessionária
-          </Button>
+          <CardDescription>
+            Consulte e gerencie os pontos responsáveis pelos
+            veículos disponíveis no DriveFlow.
+          </CardDescription>
         </CardHeader>
 
         <CardContent>
           {!dealers || dealers.length === 0 ? (
-            <div className="flex min-h-48 flex-col items-center justify-center gap-4 text-center">
-              <div>
+            <div className="flex min-h-56 flex-col items-center justify-center gap-5 text-center">
+              <div className="max-w-md space-y-1">
                 <p className="font-medium text-foreground">
                   Nenhuma concessionária cadastrada
                 </p>
 
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Cadastre a primeira concessionária
-                  para começar.
+                <p className="text-sm text-muted-foreground">
+                  Cadastre a primeira concessionária para
+                  começar a organizar os veículos do catálogo.
                 </p>
               </div>
 
-              <Button onClick={handleCreate}>
+              <Button
+                type="button"
+                onClick={handleCreate}
+              >
                 Cadastrar concessionária
               </Button>
             </div>
@@ -182,16 +214,19 @@ export function DealerListPage() {
                       {dealer.corporateName}
                     </TableCell>
 
-                    <TableCell>
-                      {dealer.cnpj}
+                    <TableCell className="text-muted-foreground">
+                      {formatCnpj(dealer.cnpj)}
                     </TableCell>
 
-                    <TableCell>
+                    <TableCell className="text-muted-foreground">
                       {dealer.zipCode}
                     </TableCell>
 
-                    <TableCell>
-                      {dealer.address}
+                    <TableCell className="max-w-xs text-muted-foreground">
+                      {formatAddress(
+                          dealer.address,
+                          dealer.number,
+                        )}
                     </TableCell>
 
                     <TableCell>
@@ -227,12 +262,12 @@ export function DealerListPage() {
                               </AlertDialogTitle>
 
                               <AlertDialogDescription>
-                                Esta ação excluirá a
-                                concessionária{' '}
+                                A concessionária{' '}
                                 <strong>
                                   {dealer.corporateName}
-                                </strong>
-                                .
+                                </strong>{' '}
+                                será excluída permanentemente.
+                                Esta ação não poderá ser desfeita.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
 
@@ -246,7 +281,7 @@ export function DealerListPage() {
                                   handleDelete(dealer.id)
                                 }
                               >
-                                Excluir
+                                Excluir concessionária
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>

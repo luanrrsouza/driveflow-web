@@ -41,15 +41,26 @@ export function VehicleCreatePage() {
 
   return (
     <main className="mx-auto w-full max-w-3xl p-6">
+      <div className="mb-6 space-y-1">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+          Novo veículo
+        </h1>
+
+        <p className="text-sm text-muted-foreground">
+          Adicione um novo veículo ao catálogo e vincule-o
+          à concessionária responsável.
+        </p>
+      </div>
+
       <Card>
         <CardHeader>
           <CardTitle>
-            Cadastrar veículo
+            Dados do veículo
           </CardTitle>
 
           <CardDescription>
-            Informe os dados do veículo e selecione
-            a concessionária responsável.
+            Informe as características do veículo, os tipos
+            de combustível e a concessionária responsável.
           </CardDescription>
         </CardHeader>
 
