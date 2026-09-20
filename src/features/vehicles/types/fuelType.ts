@@ -3,5 +3,5 @@ export type FuelType =
   | 'ETHANOL'
   | 'FLEX'
   | 'DIESEL'
-  | 'ELETRIC'
+  | 'ELECTRIC'
   | 'HYBRID'
