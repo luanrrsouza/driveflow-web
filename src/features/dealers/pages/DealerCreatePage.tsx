@@ -41,16 +41,26 @@ export function DealerCreatePage() {
 
   return (
     <main className="mx-auto w-full max-w-2xl p-6">
+      <div className="mb-6 space-y-1">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+          Nova concessionária
+        </h1>
+
+        <p className="text-sm text-muted-foreground">
+          Cadastre uma concessionária para vinculá-la
+          aos veículos do catálogo.
+        </p>
+      </div>
+
       <Card>
         <CardHeader>
           <CardTitle>
-            Cadastrar concessionária
+            Dados da concessionária
           </CardTitle>
 
           <CardDescription>
-            Informe os dados da nova concessionária.
-            O endereço será obtido automaticamente
-            através do CEP informado.
+            Informe os dados cadastrais. O endereço
+            será localizado automaticamente pelo CEP.
           </CardDescription>
         </CardHeader>
 

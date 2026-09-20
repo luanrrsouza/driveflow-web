@@ -44,7 +44,10 @@ export function VehicleEditPage() {
 
   function handleSubmit(data: VehicleFormData) {
     if (!vehicleId) {
-      toast.error('Identificador do veículo inválido.')
+      toast.error(
+        'Identificador do veículo inválido.',
+      )
+
       return
     }
 
@@ -78,18 +81,18 @@ export function VehicleEditPage() {
   if (!vehicleId) {
     return (
       <main className="mx-auto w-full max-w-3xl p-6">
+        <div className="mb-6 space-y-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            Veículo inválido
+          </h1>
+
+          <p className="text-sm text-muted-foreground">
+            Não foi possível identificar o veículo solicitado.
+          </p>
+        </div>
+
         <Card>
-          <CardHeader>
-            <CardTitle>
-              Veículo inválido
-            </CardTitle>
-
-            <CardDescription>
-              Não foi possível identificar o veículo informado.
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent>
+          <CardContent className="pt-6">
             <Button
               type="button"
               variant="outline"
@@ -106,10 +109,15 @@ export function VehicleEditPage() {
   if (isLoadingVehicle) {
     return (
       <main className="mx-auto w-full max-w-3xl p-6">
+        <div className="mb-6 space-y-2">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-4 w-96 max-w-full" />
+        </div>
+
         <Card>
           <CardHeader>
-            <Skeleton className="h-7 w-48" />
-            <Skeleton className="h-4 w-80" />
+            <Skeleton className="h-6 w-40" />
+            <Skeleton className="h-4 w-96 max-w-full" />
           </CardHeader>
 
           <CardContent className="space-y-6">
@@ -134,18 +142,26 @@ export function VehicleEditPage() {
               <div className="space-y-2">
                 <Skeleton className="h-4 w-12" />
                 <Skeleton className="h-9 w-full" />
+                <Skeleton className="h-4 w-28" />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Skeleton className="h-4 w-16" />
+              <Skeleton className="h-4 w-14" />
               <Skeleton className="h-9 w-full" />
+              <Skeleton className="h-4 w-72 max-w-full" />
             </div>
 
             <div className="space-y-3">
-              <Skeleton className="h-4 w-36" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-36" />
+                <Skeleton className="h-4 w-80 max-w-full" />
+              </div>
 
               <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+                <Skeleton className="h-6 w-24" />
+                <Skeleton className="h-6 w-24" />
+                <Skeleton className="h-6 w-24" />
                 <Skeleton className="h-6 w-24" />
                 <Skeleton className="h-6 w-24" />
                 <Skeleton className="h-6 w-24" />
@@ -155,11 +171,12 @@ export function VehicleEditPage() {
             <div className="space-y-2">
               <Skeleton className="h-4 w-28" />
               <Skeleton className="h-9 w-full" />
+              <Skeleton className="h-4 w-80 max-w-full" />
             </div>
 
-            <div className="flex justify-end gap-3">
-              <Skeleton className="h-9 w-24" />
-              <Skeleton className="h-9 w-36" />
+            <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+              <Skeleton className="h-9 w-full sm:w-24" />
+              <Skeleton className="h-9 w-full sm:w-36" />
             </div>
           </CardContent>
         </Card>
@@ -170,15 +187,26 @@ export function VehicleEditPage() {
   if (isVehicleError || !vehicle) {
     return (
       <main className="mx-auto w-full max-w-3xl p-6">
+        <div className="mb-6 space-y-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+            Veículo não encontrado
+          </h1>
+
+          <p className="text-sm text-muted-foreground">
+            Não foi possível encontrar os dados do veículo
+            solicitado.
+          </p>
+        </div>
+
         <Card>
           <CardHeader>
             <CardTitle>
-              Veículo não encontrado
+              Não foi possível carregar o veículo
             </CardTitle>
 
             <CardDescription>
-              Não foi possível carregar os dados solicitados.
-              Verifique se o veículo ainda existe.
+              O registro pode não existir mais ou ocorreu
+              uma falha durante a consulta.
             </CardDescription>
           </CardHeader>
 
@@ -208,15 +236,26 @@ export function VehicleEditPage() {
 
   return (
     <main className="mx-auto w-full max-w-3xl p-6">
+      <div className="mb-6 space-y-1">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+          Editar veículo
+        </h1>
+
+        <p className="text-sm text-muted-foreground">
+          Atualize as informações do veículo e mantenha
+          os dados do catálogo sempre atualizados.
+        </p>
+      </div>
+
       <Card>
         <CardHeader>
           <CardTitle>
-            Editar veículo
+            Dados do veículo
           </CardTitle>
 
           <CardDescription>
-            Atualize as informações do veículo e sua
-            concessionária responsável.
+            Altere as características do veículo, os tipos
+            de combustível ou a concessionária responsável.
           </CardDescription>
         </CardHeader>
 

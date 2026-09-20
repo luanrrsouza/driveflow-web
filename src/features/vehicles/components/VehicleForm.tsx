@@ -82,6 +82,12 @@ export function VehicleForm({
     isError: isDealersError,
   } = useDealers()
 
+  const dealerOptions =
+    dealers?.map((dealer) => ({
+      label: dealer.corporateName,
+      value: dealer.id,
+    })) ?? []
+
   const {
     register,
     control,
@@ -112,6 +118,7 @@ export function VehicleForm({
             id="brand"
             type="text"
             placeholder="Ex.: Jeep"
+            autoComplete="off"
             disabled={isSubmitting}
             aria-invalid={Boolean(errors.brand)}
             {...register('brand')}
@@ -133,6 +140,7 @@ export function VehicleForm({
             id="model"
             type="text"
             placeholder="Ex.: Compass"
+            autoComplete="off"
             disabled={isSubmitting}
             aria-invalid={Boolean(errors.model)}
             {...register('model')}
@@ -156,6 +164,7 @@ export function VehicleForm({
             id="color"
             type="text"
             placeholder="Ex.: Preto"
+            autoComplete="off"
             disabled={isSubmitting}
             aria-invalid={Boolean(errors.color)}
             {...register('color')}
@@ -176,18 +185,26 @@ export function VehicleForm({
           <Input
             id="year"
             type="number"
+            min="1"
+            step="1"
             placeholder="Ex.: 2026"
             disabled={isSubmitting}
             aria-invalid={Boolean(errors.year)}
             {...register('year', {
               setValueAs: (value) =>
-                value === '' ? null : Number(value),
+                value === ''
+                  ? null
+                  : Number(value),
             })}
           />
 
-          {errors.year && (
+          {errors.year ? (
             <p className="text-sm text-destructive">
               {errors.year.message}
+            </p>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              Campo opcional.
             </p>
           )}
         </div>
@@ -201,28 +218,41 @@ export function VehicleForm({
         <Input
           id="price"
           type="number"
-          step="0.01"
           min="0"
+          step="0.01"
+          inputMode="decimal"
           placeholder="Ex.: 189990.00"
           disabled={isSubmitting}
           aria-invalid={Boolean(errors.price)}
           {...register('price', {
             setValueAs: (value) =>
-              value === '' ? null : Number(value),
+              value === ''
+                ? null
+                : Number(value),
           })}
         />
 
-        {errors.price && (
+        {errors.price ? (
           <p className="text-sm text-destructive">
             {errors.price.message}
+          </p>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            Campo opcional. Informe o valor do veículo em reais.
           </p>
         )}
       </div>
 
       <div className="space-y-3">
-        <Label>
-          Tipos de combustível
-        </Label>
+        <div className="space-y-1">
+          <Label>
+            Tipos de combustível
+          </Label>
+
+          <p className="text-sm text-muted-foreground">
+            Selecione um ou mais tipos compatíveis com o veículo.
+          </p>
+        </div>
 
         <Controller
           name="fuelTypes"
@@ -243,6 +273,7 @@ export function VehicleForm({
                       id={`fuel-${fuelType.value}`}
                       checked={checked}
                       disabled={isSubmitting}
+                      aria-invalid={Boolean(errors.fuelTypes)}
                       onCheckedChange={(isChecked) => {
                         if (isChecked) {
                           field.onChange([
@@ -292,8 +323,11 @@ export function VehicleForm({
           control={control}
           render={({ field }) => (
             <Select
+              items={dealerOptions}
               value={field.value}
-              onValueChange={field.onChange}
+              onValueChange={(value) => {
+                field.onChange(value ?? '')
+              }}
               disabled={
                 isSubmitting ||
                 isLoadingDealers ||
@@ -314,12 +348,12 @@ export function VehicleForm({
               </SelectTrigger>
 
               <SelectContent>
-                {dealers?.map((dealer) => (
+                {dealerOptions.map((dealer) => (
                   <SelectItem
-                    key={dealer.id}
-                    value={dealer.id}
+                    key={dealer.value}
+                    value={dealer.value}
                   >
-                    {dealer.corporateName}
+                    {dealer.label}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -327,20 +361,22 @@ export function VehicleForm({
           )}
         />
 
-        {isDealersError && (
+        {isDealersError ? (
           <p className="text-sm text-destructive">
             Não foi possível carregar as concessionárias.
           </p>
-        )}
-
-        {errors.dealerId && (
+        ) : errors.dealerId ? (
           <p className="text-sm text-destructive">
             {errors.dealerId.message}
+          </p>
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            Selecione a concessionária responsável por este veículo.
           </p>
         )}
       </div>
 
-      <div className="flex justify-end gap-3">
+      <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
         {onCancel && (
           <Button
             type="button"
