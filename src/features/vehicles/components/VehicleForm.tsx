@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
+import { formatCurrency } from '@/lib/formatters/formatCurrency'
 
 import { useDealers } from '../../dealers/hooks/useDealers'
 import {
@@ -215,21 +216,41 @@ export function VehicleForm({
           Preço
         </Label>
 
-        <Input
-          id="price"
-          type="number"
-          min="0"
-          step="0.01"
-          inputMode="decimal"
-          placeholder="Ex.: 189990.00"
-          disabled={isSubmitting}
-          aria-invalid={Boolean(errors.price)}
-          {...register('price', {
-            setValueAs: (value) =>
-              value === ''
-                ? null
-                : Number(value),
-          })}
+        <Controller
+          name="price"
+          control={control}
+          render={({ field }) => (
+            <Input
+              id="price"
+              type="text"
+              inputMode="numeric"
+              placeholder="R$ 0,00"
+              disabled={isSubmitting}
+              aria-invalid={Boolean(errors.price)}
+              value={
+                field.value === null
+                  ? ''
+                  : formatCurrency(field.value)
+              }
+              onBlur={field.onBlur}
+              onChange={(event) => {
+                const digits =
+                  event.target.value.replace(
+                    /\D/g,
+                    '',
+                  )
+
+                if (!digits) {
+                  field.onChange(null)
+                  return
+                }
+
+                field.onChange(
+                  Number(digits) / 100,
+                )
+              }}
+            />
+          )}
         />
 
         {errors.price ? (
@@ -260,9 +281,10 @@ export function VehicleForm({
           render={({ field }) => (
             <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
               {fuelTypeOptions.map((fuelType) => {
-                const checked = field.value.includes(
-                  fuelType.value,
-                )
+                const checked =
+                  field.value.includes(
+                    fuelType.value,
+                  )
 
                 return (
                   <div
@@ -273,8 +295,12 @@ export function VehicleForm({
                       id={`fuel-${fuelType.value}`}
                       checked={checked}
                       disabled={isSubmitting}
-                      aria-invalid={Boolean(errors.fuelTypes)}
-                      onCheckedChange={(isChecked) => {
+                      aria-invalid={Boolean(
+                        errors.fuelTypes,
+                      )}
+                      onCheckedChange={(
+                        isChecked,
+                      ) => {
                         if (isChecked) {
                           field.onChange([
                             ...field.value,
@@ -287,7 +313,8 @@ export function VehicleForm({
                         field.onChange(
                           field.value.filter(
                             (value) =>
-                              value !== fuelType.value,
+                              value !==
+                              fuelType.value,
                           ),
                         )
                       }}
@@ -336,7 +363,9 @@ export function VehicleForm({
             >
               <SelectTrigger
                 className="w-full"
-                aria-invalid={Boolean(errors.dealerId)}
+                aria-invalid={Boolean(
+                  errors.dealerId,
+                )}
               >
                 <SelectValue
                   placeholder={

@@ -1,23 +1,33 @@
 import { z } from 'zod'
 
+import { isValidCnpj } from '@/lib/validators/isValidCnpj'
+
 export const dealerSchema = z.object({
   corporateName: z
     .string()
-    .min(1, 'Corporate name is required'),
+    .min(1, 'Razão social é obrigatória'),
 
   cnpj: z
     .string()
-    .min(1, 'CNPJ is required')
-    .length(14, 'CNPJ must contain 14 digits'),
+    .min(1, 'CNPJ é obrigatório')
+    .length(14, 'CNPJ deve conter 14 dígitos')
+    .refine(
+      isValidCnpj,
+      'Informe um CNPJ válido',
+    ),
 
   zipCode: z
     .string()
-    .min(1, 'Zip code is required')
-    .regex(/^\d{8}$/, 'Zip code must contain 8 digits'),
+    .min(1, 'CEP é obrigatório')
+    .regex(
+      /^\d{8}$/,
+      'CEP deve conter 8 dígitos',
+    ),
 
   number: z
     .string()
-    .min(1, 'Address number is required'),
+    .min(1, 'Número é obrigatório'),
 })
 
-export type DealerFormData = z.infer<typeof dealerSchema>
+export type DealerFormData =
+  z.infer<typeof dealerSchema>

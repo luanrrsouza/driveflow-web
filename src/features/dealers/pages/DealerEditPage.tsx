@@ -189,10 +189,11 @@ export function DealerEditPage() {
   }
 
   const initialValues: DealerFormData = {
-    corporateName: dealer.corporateName,
-    cnpj: dealer.cnpj,
-    zipCode: dealer.zipCode.replace(/\D/g, ''),
-  }
+  corporateName: dealer.corporateName,
+  cnpj: dealer.cnpj,
+  zipCode: dealer.zipCode.replace(/\D/g, ''),
+  number: dealer.number,
+}
 
   return (
     <main className="mx-auto w-full max-w-2xl p-6">
